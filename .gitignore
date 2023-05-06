@@ -1,0 +1,6 @@
+# home dotfiles
+/.emacs
+/.emacs.d
+/.gitconfig
+/.lesshst
+/.python_history
