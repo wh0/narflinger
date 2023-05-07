@@ -283,6 +283,7 @@ def installation_main(store_prefix, base, basenames):
     for basename in basenames:
       installation_install_closure(temp, store_prefix, base, basename)
 
+print('NAR Flinger 1.0', file=sys.stderr)
 with open('package.json', 'r') as f:
   package = json.load(f)
 if 'narflinger' not in package:
