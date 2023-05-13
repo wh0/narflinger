@@ -305,7 +305,7 @@ def installation_main(store_prefix, base, basenames):
     for basename in basenames:
       installation_install_closure(temp, store_prefix, base, basename)
 
-print('NAR Flinger 1.0', file=sys.stderr)
+print('NAR Flinger 1.1', file=sys.stderr)
 with open('package.json', 'r') as f:
   package = json.load(f)
 if 'narflinger' not in package:
@@ -316,7 +316,7 @@ if 'basenames' not in opts:
   print('package.json `narflinger.basenames` unset', file=sys.stderr)
   sys.exit(0)
 if not opts['basenames']:
-  print('package.json `narflinger.basenames` empty')
+  print('package.json `narflinger.basenames` empty', file=sys.stderr)
   sys.exit(0)
 installation_main(
   opts.get('store_prefix', '/tmp/nix/store'),
