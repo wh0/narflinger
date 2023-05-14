@@ -239,7 +239,7 @@ def installation_collect_recursive(store_prefix, base, basename):
   installation_encountered_hashes.add(hash)
   store_path = os.path.join(store_prefix, basename)
   if os.path.lexists(store_path):
-    print(store_path, 'exists', file=sys.stderr) # %%%
+    print(store_path, 'exists', file=sys.stderr, flush=True) # %%%
     return
   narinfo = cache_get_narinfo(base, hash)
   for refs_header in narinfo.get_all('references', ()):
@@ -249,7 +249,7 @@ def installation_collect_recursive(store_prefix, base, basename):
 
 def installation_download_one(temp, store_prefix, base, basename, narinfo):
   unpack_dst = os.path.join(temp, basename)
-  print('downloading', basename, file=sys.stderr) # %%%
+  print('downloading', basename, file=sys.stderr, flush=True) # %%%
   with contextlib.closing(cache_get_nar_reader(base, narinfo)) as nar_reader:
     nar_unpack(unpack_dst, nar_reader)
     nar_reader.finish()
@@ -263,20 +263,20 @@ def installation_maybe_link(store_prefix, target, link_path):
     pass
   except OSError as e:
     if e.errno == errno.EINVAL:
-      print('not clobbering non-symlink %s' % link_path, file=sys.stderr) # %%%
+      print('not clobbering non-symlink %s' % link_path, file=sys.stderr, flush=True) # %%%
       return
     else:
       raise
   if existing_target is not None:
     if existing_target == target:
-      print('symlink %s -> %s exists' % (link_path, target), file=sys.stderr) # %%%
+      print('symlink %s -> %s exists' % (link_path, target), file=sys.stderr, flush=True) # %%%
       return
     if not existing_target.startswith(store_prefix):
-      print('not clobbering external symlink %s -> %s' % (link_path, existing_target), file=sys.stderr) # %%%
+      print('not clobbering external symlink %s -> %s' % (link_path, existing_target), file=sys.stderr, flush=True) # %%%
       return
-    print('deleting old symlink %s -> %s' % (link_path, existing_target), file=sys.stderr) # %%%
+    print('deleting old symlink %s -> %s' % (link_path, existing_target), file=sys.stderr, flush=True) # %%%
     os.unlink(link_path)
-  print('creating symlink %s -> %s' % (link_path, target), file=sys.stderr) # %%%
+  print('creating symlink %s -> %s' % (link_path, target), file=sys.stderr, flush=True) # %%%
   os.symlink(target, link_path)
 
 def installation_link_bin(store_prefix, basename):
@@ -305,18 +305,18 @@ def installation_main(store_prefix, base, basenames):
     for basename in basenames:
       installation_install_closure(temp, store_prefix, base, basename)
 
-print('NAR Flinger 1.1', file=sys.stderr)
+print('NAR Flinger 1.2', file=sys.stderr, flush=True)
 with open('package.json', 'r') as f:
   package = json.load(f)
 if 'narflinger' not in package:
-  print('package.json `narflinger` unset', file=sys.stderr)
+  print('package.json `narflinger` unset', file=sys.stderr, flush=True)
   sys.exit(0)
 opts = package['narflinger']
 if 'basenames' not in opts:
-  print('package.json `narflinger.basenames` unset', file=sys.stderr)
+  print('package.json `narflinger.basenames` unset', file=sys.stderr, flush=True)
   sys.exit(0)
 if not opts['basenames']:
-  print('package.json `narflinger.basenames` empty', file=sys.stderr)
+  print('package.json `narflinger.basenames` empty', file=sys.stderr, flush=True)
   sys.exit(0)
 installation_main(
   opts.get('store_prefix', '/tmp/nix/store'),
